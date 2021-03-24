@@ -9,11 +9,14 @@ function statement (invoices, plays){
     let volumeCredits = 0;
     let result =  " Statement for "+ invoices.customer + "\n"; //'Statement for ${invoices.customer}¥n';
 
-    const format = new Intl.NumberFormat("en-US",
-                           { style: "currency", currency: "USD", 
-                             minimumIntegerDigits: 2 }).format;
+    const format = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format;
+
+    function playFor(aPerformance){
+        return plays[aPerformance.playID];
+    }
+
     for (let perf of invoices.performances) {
-        const play = plays[perf.playID];
+        const play = playFor(perf);
         let thisAmount =amountFor(perf, play);
 
         function amountFor(aPerformance, play){
