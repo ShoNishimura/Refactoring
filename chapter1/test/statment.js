@@ -5,6 +5,7 @@ var jsonObject_invoices = JSON.parse(invoices);//ここまでさっきの
 var jsonObject_plays = JSON.parse(plays);//ここまでさっきの
 
 function statement (invoices, plays){
+    let result =  " Statement for "+ invoices.customer + "\n"; //'Statement for ${invoices.customer}¥n';
 
     function volumeCreditsFor(aPerformance){
         let result = 0;
@@ -13,14 +14,10 @@ function statement (invoices, plays){
         return result;
     }
 
-    let totalAmount = 0;
-    let result =  " Statement for "+ invoices.customer + "\n"; //'Statement for ${invoices.customer}¥n';
-
     function usd(aNumber){
         return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber/100);
     }
     
-
     function playFor(aPerformance){
         return plays[aPerformance.playID];
     }
@@ -33,6 +30,7 @@ function statement (invoices, plays){
         return volumeCredits;    
     }
     let volumeCredits = totalVolumeCredits();
+
 
     function amountFor(aPerformance){
         let result = 0;
@@ -57,6 +55,8 @@ function statement (invoices, plays){
         return result;
     }
 
+    let totalAmount=0;
+    
     for (let perf of invoices.performances) {
         totalAmount += amountFor(perf);
     }
