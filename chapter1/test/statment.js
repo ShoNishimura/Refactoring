@@ -17,7 +17,10 @@ function statement (invoices, plays){
     let volumeCredits = 0;
     let result =  " Statement for "+ invoices.customer + "\n"; //'Statement for ${invoices.customer}¥n';
 
-    const format = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format;
+    function format(aNumber){
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber);
+    }
+    
 
     function playFor(aPerformance){
         return plays[aPerformance.playID];
