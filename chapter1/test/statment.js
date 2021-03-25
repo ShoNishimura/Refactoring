@@ -5,21 +5,22 @@ var jsonObject_invoices = JSON.parse(invoices);//ここまでさっきの
 var jsonObject_plays = JSON.parse(plays);//ここまでさっきの
 
 function statement (invoices, plays){
-    let result =  " Statement for "+ invoices.customer + "\n"; //'Statement for ${invoices.customer}¥n';
+    let result = `Statement for ${invoices.customer}\n`; 
 
-    function volumeCreditsFor(aPerformance){
-        let result = 0;
-        result += Math.max(aPerformance.audience - 30, 0);
-        if("comedy" === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5);
-        return result;
+    for (let perf of invoices.performances) {    
+        result += `   ${playFor(perf).name} ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
     }
+    result += ` Amount owed is  ${usd(totalAmount())}\n`;
+    result += ` You earned ${totalVolumeCredits()} "credits\n`;
+    return result ;
 
-    function usd(aNumber){
-        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber/100);
-    }
-    
-    function playFor(aPerformance){
-        return plays[aPerformance.playID];
+
+    function totalAmount(){
+        let result=0;
+        for (let perf of invoices.performances) {
+            result += amountFor(perf);
+        } 
+        return result;   
     }
 
     function totalVolumeCredits(){
@@ -28,6 +29,21 @@ function statement (invoices, plays){
             result += volumeCreditsFor(perf);
         }
         return result;    
+    }
+
+    function usd(aNumber){
+        return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber/100);
+    }
+    
+    function volumeCreditsFor(aPerformance){
+        let result = 0;
+        result += Math.max(aPerformance.audience - 30, 0);
+        if("comedy" === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5);
+        return result;
+    }
+
+    function playFor(aPerformance){
+        return plays[aPerformance.playID];
     }
 
     function amountFor(aPerformance){
@@ -52,23 +68,7 @@ function statement (invoices, plays){
         }
         return result;
     }
-    function totalAmount(){
-        let result=0;
-        for (let perf of invoices.performances) {
-            result += amountFor(perf);
-        } 
-        return result;   
-    }
 
-    for (let perf of invoices.performances) {    
-        result += `   ${playFor(perf).name} ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
-    }
-    
-
-
-    result += ` Amount owed is  ${usd(totalAmount())}\n`;
-    result += ` You earned ${totalVolumeCredits()} "credits\n`;
-    return result ;
 }
 
 let test = statement(jsonObject_invoices, jsonObject_plays);
