@@ -29,8 +29,6 @@ function statement (invoices, plays){
         }
         return result;    
     }
-    let volumeCredits = totalVolumeCredits();
-
 
     function amountFor(aPerformance){
         let result = 0;
