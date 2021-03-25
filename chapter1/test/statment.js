@@ -5,6 +5,14 @@ var jsonObject_invoices = JSON.parse(invoices);//ここまでさっきの
 var jsonObject_plays = JSON.parse(plays);//ここまでさっきの
 
 function statement (invoices, plays){
+
+    function volumeCreditsFor(perf){
+        let volumeCredits = 0;
+        volumeCredits += Math.max(perf.audience - 30, 0);
+        if("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+        return volumeCredits;
+    }
+
     let totalAmount = 0;
     let volumeCredits = 0;
     let result =  " Statement for "+ invoices.customer + "\n"; //'Statement for ${invoices.customer}¥n';
@@ -16,7 +24,9 @@ function statement (invoices, plays){
     }
 
     for (let perf of invoices.performances) {
-        
+        //
+        volumeCredits += volumeCreditFor(perf);
+
         function amountFor(aPerformance){
             let result = 0;
             switch (playFor(perf).type){
@@ -40,10 +50,6 @@ function statement (invoices, plays){
             return result;
         }
 
-        //
-        volumeCredits += Math.max(perf.audience - 30, 0);
-        //
-        if("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
         //
         result += `   ${playFor(perf).name} ${format(amountFor(perf)/100)} (${perf.audience} seats)\n`;
         totalAmount += amountFor(perf);
