@@ -54,11 +54,13 @@ function statement (invoices, plays){
         }
         return result;
     }
-
-    let totalAmount=0;
-    
-    for (let perf of invoices.performances) {
-        totalAmount += amountFor(perf);
+    let totalAmount = appleSauce();
+    function appleSauce(){
+        let totalAmount=0;
+        for (let perf of invoices.performances) {
+            totalAmount += amountFor(perf);
+        } 
+        return totalAmount;   
     }
 
     for (let perf of invoices.performances) {    
