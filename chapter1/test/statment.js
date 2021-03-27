@@ -84,5 +84,6 @@ function usd(aNumber){
     return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber/100);
 }
 
+
 let test = statement(jsonObject_invoices, jsonObject_plays);
 console.log(test);
