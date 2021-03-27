@@ -8,27 +8,26 @@ function statement (invoices, plays){
     const statementData = {};
     statementData.customer = invoices.customer;
     statementData.performances = invoices.performances.map(enrichPerformance);
+    statementData.totalAmount = totalAmount(statementData);
+    statementData.totalVolumeCredits = totalVolumeCredits(statementData);
     
     function enrichPerformance(aPerformance){
         const result = Object.assign({}, aPerformance);
         result.play = playFor(result) 
         result.amount = amountFor(result)
         result.volumeCredit = volumeCreditsFor(result)
+
         return result;
     }
-
     function volumeCreditsFor(aPerformance){
         let result = 0;
         result += Math.max(aPerformance.audience - 30, 0);
         if("comedy" === aPerformance.play.type) result += Math.floor(aPerformance.audience / 5);
         return result;
     }
-
-
     function playFor(aPerformance){
         return plays[aPerformance.playID];
     }
-
     function amountFor(aPerformance){
         let result = 0;
         switch (aPerformance.play.type){
@@ -51,6 +50,20 @@ function statement (invoices, plays){
         }
         return result;
     }
+    function totalAmount(data){
+        let result=0;
+        for (let perf of data.performances) {
+            result += perf.amount;
+        } 
+        return result;   
+    }
+    function totalVolumeCredits(data){
+        let result = 0;
+        for (let perf of data.performances) {
+            result += perf.volumeCredit;
+        }
+        return result;    
+    }
 
     return renderPlainText (statementData, plays);
 }
@@ -61,27 +74,9 @@ function renderPlainText (data, plays){
     for (let perf of data.performances) {    
         result += `   ${perf.play.name} ${usd(perf.amount)} (${perf.audience} seats)\n`;
     }
-    result += ` Amount owed is  ${usd(totalAmount())}\n`;
-    result += ` You earned ${totalVolumeCredits()} "credits\n`;
+    result += ` Amount owed is  ${usd(data.totalAmount)}\n`;
+    result += ` You earned ${data.totalVolumeCredits} "credits\n`;
     return result ;
-
-
-    function totalAmount(){
-        let result=0;
-        for (let perf of data.performances) {
-            result += perf.amount;
-        } 
-        return result;   
-    }
-
-    function totalVolumeCredits(){
-        let result = 0;
-        for (let perf of data.performances) {
-            result += perf.volumeCredit;
-        }
-        return result;    
-    }
-
 
     function usd(aNumber){
         return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber/100);
