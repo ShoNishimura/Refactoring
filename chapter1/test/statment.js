@@ -77,13 +77,30 @@ function renderPlainText (data){
     result += ` Amount owed is  ${usd(data.totalAmount)}\n`;
     result += ` You earned ${data.totalVolumeCredits} "credits\n`;
     return result ;    
-
 }
 
 function usd(aNumber){
     return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber/100);
 }
 
+function htmlStatement(invoices, plays){
+    return renderHtmlText(createStatementData(invoices, plays));
+}
+
+function renderHtmlText (data){
+    let result = `<h1>Statement for ${data.customer}</h1>\n`; 
+    result += "<table>\n";
+    result+= "<tr><th>play</th><th>seats</th><th>cost</th></tr>";
+    for (let perf of data.performances) {    
+        result += `<tr><td>${perf.play.name}</td><td>${usd(perf.amount)}</td><td>(${perf.audience} seats)</td></tr>\n`;
+    }
+    result += "</table>\n";
+    result += `<p>Amount owed is  <em>${usd(data.totalAmount)}</em></p>\n`;
+    result += `<p>You earned <em>${data.totalVolumeCredits} "credits</em></p>\n`;
+    return result ;    
+}
+
 
 let test = statement(jsonObject_invoices, jsonObject_plays);
 console.log(test);
+htmlStatement(jsonObject_invoices, jsonObject_plays);
