@@ -7,7 +7,7 @@ var jsonObject_plays = JSON.parse(plays);//ここまでさっきの
 function statement (invoices, plays){
     return renderPlainText(createStatementData(invoices, plays));
 
-    function createStatementData(invoices, plays){
+    function createStatementData(invoices){
         const statementData = {};
         statementData.customer = invoices.customer;
         statementData.performances = invoices.performances.map(enrichPerformance);
@@ -21,12 +21,11 @@ function statement (invoices, plays){
     .reduce((total, p) => total + p.amount, 0)
     ;
     }
-function totalVolumeCredits(data){
+    function totalVolumeCredits(data){
     return data.performances
     .reduce((total, p) => total + p.volumeCredit,0)
     ;
-}
-
+    }
     function enrichPerformance(aPerformance){
         const result = Object.assign({}, aPerformance);
         result.play = playFor(result) 
@@ -66,11 +65,9 @@ function totalVolumeCredits(data){
         }
         return result;
     }
- 
-
 }
 
-function renderPlainText (data, plays){
+function renderPlainText (data){
     let result = `Statement for ${data.customer}\n`; 
 
     for (let perf of data.performances) {    
