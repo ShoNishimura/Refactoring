@@ -5,12 +5,28 @@ var jsonObject_invoices = JSON.parse(invoices);//ここまでさっきの
 var jsonObject_plays = JSON.parse(plays);//ここまでさっきの
 
 function statement (invoices, plays){
-    const statementData = {};
-    statementData.customer = invoices.customer;
-    statementData.performances = invoices.performances.map(enrichPerformance);
-    statementData.totalAmount = totalAmount(statementData);
-    statementData.totalVolumeCredits = totalVolumeCredits(statementData);
+    return renderPlainText(createStatementData(invoices, plays));
+
+    function createStatementData(invoices, plays){
+        const statementData = {};
+        statementData.customer = invoices.customer;
+        statementData.performances = invoices.performances.map(enrichPerformance);
+        statementData.totalAmount = totalAmount(statementData);
+        statementData.totalVolumeCredits = totalVolumeCredits(statementData);
+        return statementData;
+     }
     
+  function totalAmount(data){
+    return data.performances
+    .reduce((total, p) => total + p.amount, 0)
+    ;
+    }
+function totalVolumeCredits(data){
+    return data.performances
+    .reduce((total, p) => total + p.volumeCredit,0)
+    ;
+}
+
     function enrichPerformance(aPerformance){
         const result = Object.assign({}, aPerformance);
         result.play = playFor(result) 
@@ -50,18 +66,8 @@ function statement (invoices, plays){
         }
         return result;
     }
-    function totalAmount(data){
-        return data.performances
-        .reduce((total, p) => total + p.amount, 0)
-        ;
-    }
-    function totalVolumeCredits(data){
-        return data.performances
-        .reduce((total, p) => total + p.volumeCredit,0)
-        ;
-    }
+ 
 
-    return renderPlainText (statementData, plays);
 }
 
 function renderPlainText (data, plays){
@@ -78,8 +84,6 @@ function renderPlainText (data, plays){
         return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumIntegerDigits: 2 }).format(aNumber/100);
     }
     
-
-
 }
 
 let test = statement(jsonObject_invoices, jsonObject_plays);
