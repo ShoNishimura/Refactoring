@@ -19,13 +19,6 @@ export default function createStatementData(invoices, plays){
     function playFor(aPerformance){
         return plays[aPerformance.playID];
     }
-    // function amountFor(aPerformance){
-    //     return new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;
-    // }
-
-    // function volumeCreditsFor(aPerformance){
-    //     return new PerformanceCalculator(aPerformance, playFor(aPerformance)).volumeCredits;
-    // }
 
     function totalAmount(data){
         return data.performances
@@ -35,7 +28,7 @@ export default function createStatementData(invoices, plays){
 
     function totalVolumeCredits(data){
     return data.performances
-    .reduce((total, p) => total + p.volumeCredit,0)
+    .reduce((total, p) => total + p.volumeCredits,0)
     ;
     }
 }
