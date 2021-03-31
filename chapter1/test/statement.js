@@ -42,7 +42,9 @@ function renderHtmlText (data){
     return result ;    
 }
 
-let test = statement(jsonObject_invoices, jsonObject_plays);
 let testHtml = htmlStatement(jsonObject_invoices, jsonObject_plays);
+document.getElementById("box").innerHTML = testHtml;
+
+let test = statement(jsonObject_invoices, jsonObject_plays);
 console.log(test);
-console.log(testHtml);
+
