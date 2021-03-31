@@ -43,4 +43,6 @@ function renderHtmlText (data){
 }
 
 let test = statement(jsonObject_invoices, jsonObject_plays);
+let testHtml = htmlStatement(jsonObject_invoices, jsonObject_plays);
 console.log(test);
+console.log(testHtml);
