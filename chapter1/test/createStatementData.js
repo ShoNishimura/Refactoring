@@ -17,6 +17,7 @@ export default function createStatementData(invoices, plays){
         ;
         }
         function enrichPerformance(aPerformance){
+            const calculator = new PerformanceCalculator(aPerformance);
             const result = Object.assign({}, aPerformance);
             result.play = playFor(result) 
             result.amount = amountFor(result)
@@ -55,4 +56,10 @@ export default function createStatementData(invoices, plays){
             }
             return result;
         }
+}
+
+class PerformanceCalculator {
+    constructor(aPerformance){
+        this.performance = aPerformance;
+    }
 }
